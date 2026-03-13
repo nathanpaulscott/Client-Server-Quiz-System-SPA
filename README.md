@@ -1,55 +1,175 @@
-README of project
+# Client-Server Quiz System
+
+## Overview
+Full-stack quiz management application built with **Flask**, **SQLite** and a JavaScript-driven frontend.
+
+The system supports two user roles:
+
+- **Teachers / administrators**: create, import, export, edit and delete quizzes, upload images, mark submissions, manage users, and view quiz statistics
+- **Students**: log in, take timed quizzes, submit answers, review marks and feedback, and view performance statistics
+
+The project uses a Flask backend with token-based session handling, SQLAlchemy models, and dynamic page rendering driven by AJAX requests.
+
 ---
-### Description:
-This is a timed quiz application with a geography theme, although any quiz involving multiple-choice or short answer questions can make use of the application. Teachers can upload, download, modify (edit, delete) and mark quizzes (providing a grade and feedback) and also manage users (edit user information, change privileges, delete and create accounts). Students can take quizzes, see assessor feedback and view statistics for their performance.
 
-### Requirements:
-- Flask 1.1.2
-- Flask_SQLAlchemy 2.4.1
-- Werkzeug 1.0.1
-- PyJWT 1.7.1
+## Main Features
 
-### Running the application:
-1. Open a terminal.
-2. Navigate to the "app" folder
-3. Type `python app.py`.
-4. Click the link in the terminal to open "http://127.0.0.1:5000/".
+### Authentication and session handling
+- User registration and login
+- Password hashing using Werkzeug
+- Token-based session handling using JWT
+- Login expiry and inactivity checks
+- Login attempt tracking and lockout after repeated failures
 
-### Testing the application:
-1. Open a terminal.
-2. Navigate to the "app" folder.
-3. Type `python unit_test.py`.
+### Quiz management
+- Create, edit, import, export and delete quizzes
+- Support for:
+  - multiple-choice questions
+  - short-answer questions
+  - image-based questions
+- Quiz definitions stored in a structured JSON-based `.quiz` format
+- Client-side validation before quiz import
 
-### Using the application as an teacher:
-Teachers have various privileges not available to students including managing users, modifying quizzes and marking quizzes.
+### Student workflow
+- Timed quiz attempts
+- Auto-save / intermediate submission support
+- Final submission handling
+- Review of completed and marked quizzes
+- Individual statistics view
 
-##### Quiz Administration:
-On the quiz administration page, teacher accounts may import new quizzes using the .quiz format (a JSON file with a specific format - a sample is located in the app folder), upload images, export quizzes from the database for local download or delete quizzes using the coloured buttons above the quiz table. Teachers can also edit or mark quizzes by selecting the relevant buttons in the table. 
+### Teacher workflow
+- Quiz administration dashboard
+- Submission marking with marks and feedback per question
+- User account management
+- Summary and statistics views across quizzes
 
-##### Viewing statistics:
-The statistics page displays the results of each quiz graphically. Simply provide the quiz ID to change quiz.
+### Reporting and analytics
+- Quiz-level summary statistics
+- Mean and standard deviation of marks
+- Histogram-style visualisation using Google Charts
+- Administrative and student-specific performance views
 
-##### Editing quizzes:
-Teachers can access the edit quiz page by clicking "edit" on a quiz in the admin summary. On the edit quiz page, teachers can add additional question text or images, change the response type ("text" for short answer or "mc" for multiple choice) and change the options for multiple choice questions.
+---
 
-##### Marking quizzes:
-By selecting 'mark' on a quiz in the quiz administration page, teachers may view each student's submission. The mark quiz page allows teachers to see the student's submission and the correct answer. A mark may be provided and comments written in the textbox. Once all questions have been marked, clicking 'Finish and Submit' in the header will submit the marks and feedback for students to view.
+## Architecture
 
-##### Managing users:
-Teacher accounts have permission to change usernames, passwords and roles of other accounts on the manage users page. Additionally, users can be added or deleted.
+### Backend
+- **Python / Flask**
+- **Flask-SQLAlchemy**
+- **SQLite**
+- **PyJWT**
+- **Werkzeug security utilities**
 
+### Frontend
+- HTML templates rendered by Flask
+- JavaScript / jQuery for AJAX-driven page loading and interaction
+- CSS for custom UI styling
+- DataTables for sortable / searchable tables
+- Google Charts for statistics visualisation
 
-### Using the application as a student:
-Student accounts have limited privileges allowing them to take quizzes and view results.
+### Application style
+This project is implemented as a **client-server web application with dynamic AJAX navigation**.  
+After login, page content is loaded and updated through authorised GET/POST requests rather than full-page reloads.
 
-##### Student summary:
-The student summary page shows information about available quizzes including their completion status and awarded mark. Students can click on completed quizzes to view feedback or click on other quizzes to complete them. 
+---
 
-##### Taking a quiz: 
-Students have a limited amount of time to complete a quiz and may submit at any time. If time runs out, the quiz will automatically be submitted with the student's answers. The remaining time for a quiz can be seen in the header and may be hidden by clicking. Quizzes may contain multiple choice questions, short answer questions and images. If a student for whatever reason cannot finish the quiz, they can click 'cancel' to abort the quiz. Upon completing the quiz, students can submit their work by clicking 'Finish and Submit Answers'.
+## Data Model
 
-##### Viewing feedback:
-Click on a quiz with 'marked' status to view marks and feedback. The numerical mark for each question will be visible directly above the question text. Comments from the assessor are found in a textbox below the answers.
+The main database tables are:
 
-##### Viewing statistics:
-The statistics page displays the results of each quiz the student has taken graphically. Simply provide the quiz ID to change quiz.
+- **User** – user accounts, roles and login tracking
+- **Question_Set** – quiz metadata
+- **Question** – question content, marks and answer metadata
+- **Submission** – quiz attempt status per user
+- **Submission_Answer** – submitted answers, marks and comments
+- **Log** – application activity log
+
+This structure supports quiz delivery, marking, auditing and summary statistics.
+
+---
+
+## Quiz Format
+
+Quizzes are stored in a JSON-based `.quiz` format.
+
+A quiz contains:
+- header metadata (`topic`, `time`, `enabled`, optional `qs_id`)
+- one or more questions
+- support for text and image question components
+- support for multiple-choice or free-text answers
+
+This allows quizzes to be imported/exported and edited outside the UI if needed.
+
+---
+
+## Security / Validation Features
+
+Implemented safeguards include:
+
+- password hashing
+- token verification on protected routes
+- client-side validation for usernames and passwords
+- import validation for uploaded quiz files
+- submission state checking to prevent illegal re-submission
+- secure file upload handling for quiz images
+
+---
+
+## Tech Stack
+
+- Python
+- Flask
+- Flask-SQLAlchemy
+- SQLite
+- JavaScript
+- jQuery
+- CSS
+- JWT
+- DataTables
+- Google Charts
+
+---
+
+## Running the Application
+
+1. Install the required packages
+2. Navigate to the application folder
+3. Run:
+
+```bash
+python app.py
+```
+
+4. Open:
+
+```text
+http://127.0.0.1:5000/
+```
+
+---
+
+## Example Capabilities Demonstrated
+
+This project demonstrates:
+
+- full-stack web application development
+- client-server architecture
+- relational data modelling
+- token-based authentication
+- dynamic front-end behaviour with AJAX
+- quiz workflow state management
+- statistics and reporting features
+- structured JSON import/export workflows
+
+---
+
+## Notes
+
+This was developed as a university software engineering project.  
+The codebase reflects a practical emphasis on functionality, role-based workflows, and end-to-end system integration rather than production deployment hardening.
+
+---
+
+## Author
+
+Nathan Scott
